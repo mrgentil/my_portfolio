@@ -3,6 +3,14 @@ import { useEffect, useState } from 'react';
 import Script from 'next/script';
 import { motion } from '@/lib/motion';
 
+declare global {
+  interface Window {
+    grecaptcha?: {
+      execute: (siteKey: string, opts: { action: string }) => Promise<string>;
+    };
+  }
+}
+
 export default function Contact() {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<null | 'ok' | 'error'>(null);
@@ -14,7 +22,7 @@ export default function Contact() {
   useEffect(() => {
     if (!siteKey) return;
     const id = setInterval(() => {
-      if (typeof window !== 'undefined' && (window as any).grecaptcha && (window as any).grecaptcha.execute) {
+      if (typeof window !== 'undefined' && window.grecaptcha && window.grecaptcha.execute) {
         clearInterval(id);
         setCaptchaReady(true);
       }
@@ -38,10 +46,10 @@ export default function Contact() {
     try {
       // get captcha token if configured
       let captchaToken: string | undefined = undefined;
-      if (siteKey && captchaReady && typeof (window as any).grecaptcha !== 'undefined') {
+      if (siteKey && captchaReady && typeof window !== 'undefined' && window.grecaptcha) {
         try {
-          captchaToken = await (window as any).grecaptcha.execute(siteKey, { action: 'contact' });
-        } catch (_) {
+          captchaToken = await window.grecaptcha.execute(siteKey, { action: 'contact' });
+        } catch {
           // ignore, will fail server-side
         }
       }
@@ -57,7 +65,7 @@ export default function Contact() {
       setStatus('ok');
       form.reset();
       setShowToast(true);
-    } catch (err: any) {
+    } catch {
       setStatus('error');
       setErrorMsg("Impossible d'envoyer le message. Réessaie plus tard.");
       setShowToast(true);

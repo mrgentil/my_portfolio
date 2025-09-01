@@ -10,23 +10,23 @@ type GitProject = {
   language: string | null;
 };
 
+const REPOS_LIST = [
+  'rh_app_new',
+  'orange-music-talents',
+  'kgbPharma',
+  'e-influencers',
+  'school_manage',
+  'HrManage',
+] as const;
+
 export default function Projects() {
   const [items, setItems] = useState<GitProject[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fallbackUsed, setFallbackUsed] = useState(false);
 
-  const reposList = [
-    'rh_app_new',
-    'orange-music-talents',
-    'kgbPharma',
-    'e-influencers',
-    'school_manage',
-    'HrManage',
-  ];
-
   useEffect(() => {
     let active = true;
-    const repos = reposList.join(',');
+    const repos = REPOS_LIST.join(',');
     fetch(`/api/projects?user=mrgentil&repos=${encodeURIComponent(repos)}`, { cache: 'no-store' })
       .then(async (r) => {
         if (!r.ok) {
@@ -40,7 +40,7 @@ export default function Projects() {
         const list = (data?.items || []) as GitProject[];
         if (list.length === 0) {
           // API responded but empty (likely rate-limit or fetch failed per-repo)
-          const fallback: GitProject[] = reposList.map((name) => ({
+          const fallback: GitProject[] = REPOS_LIST.map((name) => ({
             name,
             description: null,
             url: `https://github.com/mrgentil/${name}`,
@@ -57,7 +57,7 @@ export default function Projects() {
         if (!active) return;
         setError('Impossible de charger les projets GitHub. Affichage en mode dégradé.');
         // Fallback minimal à partir de la liste fournie
-        const fallback: GitProject[] = reposList.map((name) => ({
+        const fallback: GitProject[] = REPOS_LIST.map((name) => ({
           name,
           description: null,
           url: `https://github.com/mrgentil/${name}`,
@@ -117,6 +117,7 @@ export default function Projects() {
                 className="group rounded-2xl border border-gray-800 bg-gray-900/60 p-6 hover:bg-gray-900 transition-colors block"
               >
                 <div className="rounded-lg overflow-hidden border border-gray-700 mb-4 bg-gray-800/60">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={`https://opengraph.githubassets.com/1/mrgentil/${p.name}`}
                     alt={`Aperçu du dépôt ${p.name}`}

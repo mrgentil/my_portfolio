@@ -53,7 +53,7 @@ async function verifyRecaptcha(token: string | undefined, ip: string) {
     body,
   });
   if (!resp.ok) return { ok: false, reason: 'recaptcha_http_error' } as const;
-  const json = (await resp.json()) as any;
+  const json = (await resp.json()) as { success?: boolean; score?: number };
   const min = Number(process.env.RECAPTCHA_MIN_SCORE || '0.5');
   if (json.success !== true) return { ok: false, reason: 'recaptcha_failed' } as const;
   if (typeof json.score === 'number' && json.score < min) return { ok: false, reason: 'low_score', score: json.score } as const;
@@ -162,10 +162,11 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      let nodemailer: any = null;
+      let nodemailer: typeof import('nodemailer') | null = null;
       try {
-        nodemailer = (await import('nodemailer')).default ?? (await import('nodemailer'));
-      } catch (_) {
+        const mod = await import('nodemailer');
+        nodemailer = (mod.default ?? mod) as typeof import('nodemailer');
+      } catch {
         return Response.json(
           { error: 'nodemailer_not_installed', detail: 'Run: npm i nodemailer' },
           { status: 500 }
