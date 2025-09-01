@@ -32,6 +32,18 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+.env.local
+.env.development
+.env.production
+
+# editors / tooling
+.vscode/
+.idea/
+.eslintcache
+.turbo/
+.pnpm-store/
+.nyc_output/
+coverage/
 
 # vercel
 .vercel

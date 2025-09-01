@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio – Bedi TSHITSHOMPO
 
-## Getting Started
+Site personnel construit avec Next.js 15 (App Router) et Tailwind CSS. Il reprend le style du site de référence avec sections Hero, Services, Technologies, Projets, Contact et une page Expériences (timeline alternée).
 
-First, run the development server:
+• Démo locale: http://localhost:3000
+
+## Aperçu
+
+![Accueil](docs/screenshot-home.png)
+![Expériences](docs/screenshot-experiences.png)
+![Projets](docs/screenshot-projects.png)
+
+Place tes captures d’écran dans `docs/` avec ces noms pour qu’elles s’affichent.
+
+## Fonctionnalités
+
+- Thème sombre, fond grille, halos, animations (shim si framer-motion manquant)
+- Header fixe, scroll-smooth + offset (ancres `/#services` etc.)
+- Expériences: timeline gauche/droite + formations + compétences
+- Projets: récupération depuis GitHub (fallback si rate‑limit)
+- Contact: honeypot, rate‑limit, reCAPTCHA v3, sanitation HTML, SMTP (Gmail) ou Resend
+- Sécurité: CSP/HSTS/headers via middleware
+
+## Prérequis
+
+- Node.js 18+
+- npm (ou pnpm/yarn)
+
+## Installation
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Configuration
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Extrait `.env.local` (déjà présent et commenté dans le repo):
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+# SMTP (Gmail app password)
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=465
+MAIL_USERNAME=ton_email@gmail.com
+MAIL_PASSWORD=mot_de_passe_application
+MAIL_ENCRYPTION=ssl
+MAIL_FROM_ADDRESS="ton_email@gmail.com"
+MAIL_FROM_NAME="Portfolio"
+CONTACT_TO_EMAIL="ton_email@gmail.com"
 
-## Learn More
+# reCAPTCHA v3 (prod recommandé)
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY=
+RECAPTCHA_SECRET=
 
-To learn more about Next.js, take a look at the following resources:
+# GitHub (évite le rate limit)
+GITHUB_TOKEN=
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Option Resend
+RESEND_API_KEY=
+CONTACT_FROM_EMAIL="Portfolio <onboarding@resend.dev>"
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Déploiement
 
-## Deploy on Vercel
+- Vercel: ajoute les variables d’environnement et déploie.
+- Autres: `npm run build && npm start`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Sécurité
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- reCAPTCHA v3 requis en production sur `/api/contact`
+- Rate‑limit 5 req/10min/IP, sanitation HTML, erreurs masquées en prod
+- CSP/HSTS/X-Frame-Options/Referrer-Policy via `middleware.ts`
+
+## Licences / Crédits
+
+Usage personnel/portfolio.
