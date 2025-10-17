@@ -1,8 +1,7 @@
 "use client";
-import React from 'react';
+import React from "react";
 
-// Lightweight no-op shim to avoid build errors when 'framer-motion' isn't installed.
-
+// Lightweight no-op shim to avoid build errors when 'framer-motion' isn't installed
 type MotionCommonProps = {
   initial?: unknown;
   animate?: unknown;
@@ -19,35 +18,49 @@ type MotionCommonProps = {
   onViewportLeave?: unknown;
 };
 
-type PropsFor<T extends keyof React.JSX.IntrinsicElements> = Omit<
+// ✅ Ajouter explicitement `children?: React.ReactNode`
+type PropsFor<T extends keyof JSX.IntrinsicElements> = Omit<
   React.ComponentPropsWithoutRef<T>,
   keyof MotionCommonProps
 > &
-  MotionCommonProps & {
-    children?: React.ReactNode;
-  };
+  MotionCommonProps & { children?: React.ReactNode };
 
-function withElement<T extends keyof React.JSX.IntrinsicElements>(Tag: T) {
-  const Comp = React.forwardRef<HTMLElement, PropsFor<T>>(
-    (props: PropsFor<T>, ref) => {
-      const { children, ...rest } = props;
-      const safe = omitMotionProps(rest as Record<string, unknown>);
-      return React.createElement(
-        Tag,
-        { ref, ...(safe as React.ComponentPropsWithoutRef<T>) },
-        children
-      );
-    }
-  );
+function omitMotionProps(obj: Record<string, unknown>): Record<string, unknown> {
+  const copy: Record<string, unknown> = { ...obj };
+  const keys = [
+    "initial",
+    "animate",
+    "exit",
+    "transition",
+    "variants",
+    "whileInView",
+    "whileHover",
+    "whileTap",
+    "viewport",
+    "layout",
+    "layoutId",
+    "onViewportEnter",
+    "onViewportLeave",
+  ];
+  for (const k of keys) delete copy[k];
+  return copy;
+}
+
+function withElement<T extends keyof JSX.IntrinsicElements>(Tag: T) {
+  const Comp = React.forwardRef<HTMLElement, PropsFor<T>>((props, ref) => {
+    const { children, ...rest } = props;
+    const safe = omitMotionProps(rest as Record<string, unknown>);
+    return React.createElement(Tag, { ref, ...(safe as React.ComponentPropsWithoutRef<T>) }, children);
+  });
   Comp.displayName = `Motion(${String(Tag)})`;
-  return Comp as unknown as (props: PropsFor<T>) => React.JSX.Element;
+  return Comp as unknown as (props: PropsFor<T>) => JSX.Element;
 }
 
 export const motion = {
-  div: withElement('div'),
-  span: withElement('span'),
-  a: withElement('a'),
-  form: withElement('form'),
+  div: withElement("div"),
+  span: withElement("span"),
+  a: withElement("a"),
+  form: withElement("form"),
 } as const;
 
 export const AnimatePresence: React.FC<React.PropsWithChildren> = ({ children }) => <>{children}</>;
