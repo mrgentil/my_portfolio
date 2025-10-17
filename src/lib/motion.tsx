@@ -20,11 +20,13 @@ type MotionCommonProps = {
 };
 
 // ✅ Props pour tout élément HTML, incluant children
-type PropsFor<T extends keyof JSX.IntrinsicElements> = Omit<
-  React.ComponentPropsWithoutRef<T>,
+type PropsFor<T extends keyof React.JSX.IntrinsicElements> = Omit<
+  React.JSX.IntrinsicElements[T],
   keyof MotionCommonProps
 > &
-  MotionCommonProps & { children?: React.ReactNode };
+  MotionCommonProps & {
+    children?: React.ReactNode;
+  };
 
 // ✅ Supprime les props liées aux animations
 function omitMotionProps(obj: Record<string, unknown>): Record<string, unknown> {
@@ -49,16 +51,16 @@ function omitMotionProps(obj: Record<string, unknown>): Record<string, unknown> 
 }
 
 // ✅ Wrapper React.forwardRef pour créer des éléments “motion”
-function withElement<T extends keyof JSX.IntrinsicElements>(Tag: T) {
-  const Comp = React.forwardRef<HTMLElement, PropsFor<T>>((props, ref) => {
+function withElement<T extends keyof React.JSX.IntrinsicElements & keyof HTMLElementTagNameMap>(Tag: T) {
+  const Comp = React.forwardRef<HTMLElementTagNameMap[T], PropsFor<T>>((props, ref) => {
     // Explicitly type the props destructuring to handle children properly
     const { children, ...rest } = props as PropsFor<T> & { children?: React.ReactNode };
     const safe = omitMotionProps(rest as unknown as Record<string, unknown>);
-    return React.createElement(Tag, { ref, ...(safe as React.ComponentPropsWithoutRef<T>) }, children);
+    return React.createElement(Tag, { ref, ...(safe as React.JSX.IntrinsicElements[T]) }, children);
   });
 
   Comp.displayName = `Motion(${String(Tag)})`;
-  return Comp as unknown as (props: PropsFor<T>) => JSX.Element;
+  return Comp as unknown as (props: PropsFor<T>) => React.ReactElement | null;
 }
 
 // ✅ Export des éléments motion “shimmés”

@@ -1,21 +1,37 @@
 // next.config.mjs
 /** @type {import('next').NextConfig} */
-const isProd = process.env.NODE_ENV === 'production'
+const isProd = process.env.NODE_ENV === 'production';
+const isNetlify = process.env.NETLIFY === 'true';
 
 // ⚠️ Mets le nom exact de ton repo GitHub:
-const repoName = 'clone' // <-- change si besoin
+const repoName = 'clone'; // <-- change si besoin
 
-export default {
-    // Active l’export statique
+const isStaticExport = isProd && !isNetlify;
+
+const config = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'opengraph.githubassets.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
+};
+
+if (isStaticExport) {
+  Object.assign(config, {
     output: 'export',
-
-    // Indispensable pour GitHub Project Pages
-    basePath: isProd ? `/${repoName}` : '',
-    assetPrefix: isProd ? `/${repoName}/` : '',
-
-    // Pour que next/image sorte des <img> statiques
-    images: { unoptimized: true },
-
-    // Évite les 404 sur GitHub Pages pour les liens /routes/
+    basePath: `/${repoName}`,
+    assetPrefix: `/${repoName}/`,
     trailingSlash: true,
+    images: {
+      ...config.images,
+      unoptimized: true,
+    },
+  });
 }
+
+export default config;
