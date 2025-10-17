@@ -12,12 +12,12 @@ declare global {
 }
 
 export default function Contact() {
-  const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState<null | 'ok' | 'error'>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [status, setStatus] = useState<'ok' | 'error' | null>(null);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
-  const [captchaReady, setCaptchaReady] = useState(false);
-  const [showToast, setShowToast] = useState(false);
+  const [captchaReady, setCaptchaReady] = useState<boolean>(false);
+  const [showToast, setShowToast] = useState<boolean>(false);
 
   useEffect(() => {
     if (!siteKey) return;
@@ -39,14 +39,16 @@ export default function Contact() {
     const form = e.currentTarget;
     const fd = new FormData(form);
     const payload = {
-      name: String(fd.get('name') || ''),
-      email: String(fd.get('email') || ''),
-      message: String(fd.get('message') || ''),
-      website: String(fd.get('website') || ''), // honeypot
+      name: (fd.get('name') as string) || '',
+      email: (fd.get('email') as string) || '',
+      message: (fd.get('message') as string) || '',
+      website: (fd.get('website') as string) || '', // honeypot
     };
+
     setLoading(true);
     setStatus(null);
     setErrorMsg('');
+
     try {
       let captchaToken: string | undefined = undefined;
       if (siteKey && captchaReady && typeof window !== 'undefined' && window.grecaptcha) {
@@ -56,14 +58,15 @@ export default function Contact() {
           // ignore, will fail server-side
         }
       }
+
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...payload, captchaToken }),
       });
-      if (!res.ok) {
-        throw new Error('send_failed');
-      }
+
+      if (!res.ok) throw new Error('send_failed');
+
       setStatus('ok');
       form.reset();
       setShowToast(true);
@@ -88,6 +91,7 @@ export default function Contact() {
         {siteKey && (
           <Script src={`https://www.google.com/recaptcha/api.js?render=${siteKey}`} strategy="afterInteractive" />
         )}
+
         <motion.div
           className="text-center mb-10"
           initial={{ opacity: 0, y: 12 }}
