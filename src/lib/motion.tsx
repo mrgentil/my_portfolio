@@ -2,7 +2,6 @@
 import React from 'react';
 
 // Lightweight no-op shim to avoid build errors when 'framer-motion' isn't installed.
-// It preserves the JSX structure; animation props are ignored.
 
 type MotionCommonProps = {
   initial?: unknown;
@@ -24,7 +23,9 @@ type PropsFor<T extends keyof React.JSX.IntrinsicElements> = Omit<
   React.ComponentPropsWithoutRef<T>,
   keyof MotionCommonProps
 > &
-  MotionCommonProps;
+  MotionCommonProps & {
+    children?: React.ReactNode; // ✅ Ajout explicite ici
+  };
 
 function omitMotionProps(obj: Record<string, unknown>): Record<string, unknown> {
   const copy: Record<string, unknown> = { ...obj };
@@ -48,15 +49,18 @@ function omitMotionProps(obj: Record<string, unknown>): Record<string, unknown> 
 }
 
 function withElement<T extends keyof React.JSX.IntrinsicElements>(Tag: T) {
-  const Comp = React.forwardRef<HTMLElement, PropsFor<T>>((props, ref) => {
-    const { children, ...rest } = props || ({} as PropsFor<T>);
-    const safe = omitMotionProps(rest as unknown as Record<string, unknown>);
-    return React.createElement(
-      Tag,
-      { ref, ...(safe as React.ComponentPropsWithoutRef<T>) },
-      children
-    );
-  });
+  const Comp = React.forwardRef<HTMLElement, PropsFor<T>>(
+    (props, ref) => {
+      // ✅ Plus d'erreur ici
+      const { children, ...rest } = props || ({} as PropsFor<T>);
+      const safe = omitMotionProps(rest as Record<string, unknown>);
+      return React.createElement(
+        Tag,
+        { ref, ...(safe as React.ComponentPropsWithoutRef<T>) },
+        children
+      );
+    }
+  );
   Comp.displayName = `Motion(${String(Tag)})`;
   return Comp as unknown as (props: PropsFor<T>) => React.JSX.Element;
 }
