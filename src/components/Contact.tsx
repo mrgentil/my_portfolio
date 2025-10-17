@@ -22,7 +22,11 @@ export default function Contact() {
   useEffect(() => {
     if (!siteKey) return;
     const id = setInterval(() => {
-      if (typeof window !== 'undefined' && window.grecaptcha && window.grecaptcha.execute) {
+      if (
+        typeof window !== 'undefined' &&
+        window.grecaptcha &&
+        typeof window.grecaptcha.execute === 'function'
+      ) {
         clearInterval(id);
         setCaptchaReady(true);
       }
@@ -44,7 +48,6 @@ export default function Contact() {
     setStatus(null);
     setErrorMsg('');
     try {
-      // get captcha token if configured
       let captchaToken: string | undefined = undefined;
       if (siteKey && captchaReady && typeof window !== 'undefined' && window.grecaptcha) {
         try {
@@ -59,7 +62,6 @@ export default function Contact() {
         body: JSON.stringify({ ...payload, captchaToken }),
       });
       if (!res.ok) {
-        // Affiche un message générique côté client
         throw new Error('send_failed');
       }
       setStatus('ok');
@@ -74,7 +76,6 @@ export default function Contact() {
     }
   }
 
-  // Auto hide toast after 4s
   useEffect(() => {
     if (!showToast) return;
     const t = setTimeout(() => setShowToast(false), 4000);
@@ -106,7 +107,6 @@ export default function Contact() {
           transition={{ duration: 0.5 }}
           className="relative rounded-2xl border border-gray-800 bg-gray-900/60 p-6"
         >
-          {/* honeypot */}
           <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -130,6 +130,7 @@ export default function Contact() {
               />
             </div>
           </div>
+
           <div className="mt-6">
             <label className="block text-sm text-gray-300 mb-1">Message</label>
             <textarea
@@ -141,6 +142,7 @@ export default function Contact() {
               className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-gray-100 outline-none focus:ring-2 focus:ring-blue-600 disabled:opacity-60 disabled:cursor-not-allowed"
             />
           </div>
+
           <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
             <button
               type="submit"
@@ -157,13 +159,13 @@ export default function Contact() {
               )}
             </button>
             <div className="text-gray-400 text-sm">
-              Ou écrivez-moi :
-              {' '}
-              <a href="mailto:tshitshob@gmail.com" className="text-blue-400 hover:text-blue-300">tshitshob@gmail.com</a>
+              Ou écrivez-moi :{' '}
+              <a href="mailto:tshitshob@gmail.com" className="text-blue-400 hover:text-blue-300">
+                tshitshob@gmail.com
+              </a>
             </div>
           </div>
 
-          {/* Loading overlay */}
           {loading && (
             <div className="absolute inset-0 rounded-2xl bg-black/40 backdrop-blur-[1px] flex items-center justify-center" aria-live="polite" aria-busy="true">
               <div className="flex items-center gap-3 text-gray-200">
@@ -174,7 +176,7 @@ export default function Contact() {
           )}
         </motion.form>
       </div>
-      {/* Toast notifications */}
+
       {showToast && status === 'ok' && (
         <div
           role="status"
@@ -195,6 +197,7 @@ export default function Contact() {
           </div>
         </div>
       )}
+
       {showToast && status === 'error' && (
         <div
           role="status"
