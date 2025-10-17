@@ -29,7 +29,7 @@ type PropsFor<T extends keyof React.JSX.IntrinsicElements> = Omit<
 
 function withElement<T extends keyof React.JSX.IntrinsicElements>(Tag: T) {
   const Comp = React.forwardRef<HTMLElement, PropsFor<T>>(
-    (props, ref) => {
+    (props: PropsFor<T>, ref) => {
       const { children, ...rest } = props;
       const safe = omitMotionProps(rest as Record<string, unknown>);
       return React.createElement(
