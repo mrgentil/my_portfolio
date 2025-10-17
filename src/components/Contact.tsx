@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import Script from 'next/script';
-import { motion } from '@/lib/motion';
+import { motion } from 'framer-motion';
 
 declare global {
   interface Window {
