@@ -24,35 +24,13 @@ type PropsFor<T extends keyof React.JSX.IntrinsicElements> = Omit<
   keyof MotionCommonProps
 > &
   MotionCommonProps & {
-    children?: React.ReactNode; // ✅ Ajout explicite ici
+    children?: React.ReactNode;
   };
-
-function omitMotionProps(obj: Record<string, unknown>): Record<string, unknown> {
-  const copy: Record<string, unknown> = { ...obj };
-  const keys = [
-    'initial',
-    'animate',
-    'exit',
-    'transition',
-    'variants',
-    'whileInView',
-    'whileHover',
-    'whileTap',
-    'viewport',
-    'layout',
-    'layoutId',
-    'onViewportEnter',
-    'onViewportLeave',
-  ];
-  for (const k of keys) delete copy[k];
-  return copy;
-}
 
 function withElement<T extends keyof React.JSX.IntrinsicElements>(Tag: T) {
   const Comp = React.forwardRef<HTMLElement, PropsFor<T>>(
     (props, ref) => {
-      // ✅ Plus d'erreur ici
-      const { children, ...rest } = props || ({} as PropsFor<T>);
+      const { children, ...rest } = props;
       const safe = omitMotionProps(rest as Record<string, unknown>);
       return React.createElement(
         Tag,
