@@ -20,7 +20,7 @@ type MotionCommonProps = {
   onViewportLeave?: unknown;
 };
 
-type PropsFor<T extends keyof JSX.IntrinsicElements> = Omit<
+type PropsFor<T extends keyof React.JSX.IntrinsicElements> = Omit<
   React.ComponentPropsWithoutRef<T>,
   keyof MotionCommonProps
 > &
@@ -47,14 +47,18 @@ function omitMotionProps(obj: Record<string, unknown>): Record<string, unknown> 
   return copy;
 }
 
-function withElement<T extends keyof JSX.IntrinsicElements>(Tag: T) {
+function withElement<T extends keyof React.JSX.IntrinsicElements>(Tag: T) {
   const Comp = React.forwardRef<HTMLElement, PropsFor<T>>((props, ref) => {
     const { children, ...rest } = props || ({} as PropsFor<T>);
     const safe = omitMotionProps(rest as unknown as Record<string, unknown>);
-    return React.createElement(Tag, { ref, ...(safe as React.ComponentPropsWithoutRef<T>) }, children);
+    return React.createElement(
+      Tag,
+      { ref, ...(safe as React.ComponentPropsWithoutRef<T>) },
+      children
+    );
   });
   Comp.displayName = `Motion(${String(Tag)})`;
-  return Comp as unknown as (props: PropsFor<T>) => JSX.Element;
+  return Comp as unknown as (props: PropsFor<T>) => React.JSX.Element;
 }
 
 export const motion = {
