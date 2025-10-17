@@ -1,7 +1,8 @@
 "use client";
+
 import React from "react";
 
-// Lightweight no-op shim to avoid build errors when 'framer-motion' isn't installed
+// ✅ Props communs pour les animations (shim pour Framer Motion)
 type MotionCommonProps = {
   initial?: unknown;
   animate?: unknown;
@@ -18,13 +19,14 @@ type MotionCommonProps = {
   onViewportLeave?: unknown;
 };
 
-// ✅ Ajouter explicitement `children?: React.ReactNode`
+// ✅ Props pour tout élément HTML, incluant children
 type PropsFor<T extends keyof JSX.IntrinsicElements> = Omit<
   React.ComponentPropsWithoutRef<T>,
   keyof MotionCommonProps
 > &
   MotionCommonProps & { children?: React.ReactNode };
 
+// ✅ Supprime les props liées aux animations
 function omitMotionProps(obj: Record<string, unknown>): Record<string, unknown> {
   const copy: Record<string, unknown> = { ...obj };
   const keys = [
@@ -46,16 +48,20 @@ function omitMotionProps(obj: Record<string, unknown>): Record<string, unknown> 
   return copy;
 }
 
+// ✅ Wrapper React.forwardRef pour créer des éléments “motion”
 function withElement<T extends keyof JSX.IntrinsicElements>(Tag: T) {
   const Comp = React.forwardRef<HTMLElement, PropsFor<T>>((props, ref) => {
-    const { children, ...rest } = props;
-    const safe = omitMotionProps(rest as Record<string, unknown>);
+    // Explicitly type the props destructuring to handle children properly
+    const { children, ...rest } = props as PropsFor<T> & { children?: React.ReactNode };
+    const safe = omitMotionProps(rest as unknown as Record<string, unknown>);
     return React.createElement(Tag, { ref, ...(safe as React.ComponentPropsWithoutRef<T>) }, children);
   });
+
   Comp.displayName = `Motion(${String(Tag)})`;
   return Comp as unknown as (props: PropsFor<T>) => JSX.Element;
 }
 
+// ✅ Export des éléments motion “shimmés”
 export const motion = {
   div: withElement("div"),
   span: withElement("span"),
@@ -63,4 +69,5 @@ export const motion = {
   form: withElement("form"),
 } as const;
 
+// ✅ AnimatePresence shim
 export const AnimatePresence: React.FC<React.PropsWithChildren> = ({ children }) => <>{children}</>;
