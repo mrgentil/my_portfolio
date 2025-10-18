@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Bedi TSHITSHOMPO",
-  description: "Nestor Portfolio - Développeur Fullstack",
+  description: "Bedi TSHITSHOMPO - Portfolio - Développeur Fullstack",
   icons: {
     icon: "/images/pr.png",
     apple: "/images/pr.png",

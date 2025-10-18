@@ -91,7 +91,10 @@ export default function Projects() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-3xl md:text-4xl font-bold">Projets</h2>
-          <p className="text-gray-400 mt-3">Quelques dépôts GitHub sélectionnés</p>
+          <p className="text-gray-400 mt-3">Quelques réalisations marquantes
+Projets qui parlent d’eux-mêmes
+Mes créations en action
+Expériences digitales que j’ai construites</p>
         </motion.div>
 
         {error && (

@@ -101,7 +101,10 @@ export default function Experiences() {
             Parcours
           </span>
           <h1 className="text-3xl md:text-4xl font-bold">Expériences</h1>
-          <p className="text-gray-400 mt-3">Expériences professionnelles, formations et compétences</p>
+          <p className="text-gray-400 mt-3">Mon parcours en un coup d’œil
+Expérience, savoir-faire & passion
+Ce qui forge mon expertise
+De l’apprentissage à la maîtrise</p>
         </motion.div>
 
         {/* Expériences Pro — timeline */}

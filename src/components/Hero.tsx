@@ -42,14 +42,21 @@ export default function Hero() {
               </span>
             </h1>
             <p className="text-lg md:text-xl text-gray-300 max-w-xl mx-auto lg:mx-0 mb-8">
-              Création d’expériences web modernes, performantes et accessibles. Spécialisé en
-              Next.js, API Node, bases de données et intégrations cloud.
+              J' accompagne les entreprises dans leur transformation digitale à travers la conception de solutions web, mobiles et infrastructurelles sur mesure.
+mon approche allie vision stratégique, expertise technique et sens du détail pour garantir des produits fiables, performants et alignés sur vos objectifs.
+De l’idée à la maintenance, je construis des expériences qui évoluent avec votre croissance.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <a href="#projets" className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors text-center">
                 Voir mes projets
               </a>
-              <a href="#contact" className="border border-gray-700 text-gray-200 px-8 py-3 rounded-lg hover:bg-gray-900 transition-colors text-center">
+              <a
+                href="/Bedi_Tshitsho_CV.pdf"
+                className="border border-gray-700 text-gray-200 px-8 py-3 rounded-lg hover:bg-gray-900 transition-colors text-center"
+                target="_blank"
+                rel="noreferrer"
+                download
+              >
                 Télécharger CV
               </a>
             </div>

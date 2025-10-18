@@ -4,7 +4,7 @@ import { motion } from '@/lib/motion';
 export default function Technologies() {
   const stacks: { group: string; items: string[] }[] = [
     { group: 'Frontend', items: ['Next.js', 'React', 'Tailwind CSS'] },
-    { group: 'Backend', items: ['Node.js', 'Express', 'REST', 'Prisma', 'Laravel'] },
+    { group: 'Backend', items: ['Node.js','Nest.js', 'Express', 'REST', 'Prisma', 'Laravel'] },
     { group: 'Mobile', items: ['Flutter', 'React Native'] },
     { group: 'Bases de données', items: ['PostgreSQL', 'MySQL', 'SQLite'] },
     { group: 'Outils', items: ['Git', 'Docker', 'CI/CD'] },

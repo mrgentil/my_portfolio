@@ -9,6 +9,8 @@ type Props = {
 };
 
 export default function PageHero({ title, subtitle, ctaHref, ctaLabel }: Props) {
+  const isDownloadLink = !!ctaHref && /\.pdf$/i.test(ctaHref);
+
   return (
     <section className="relative bg-gray-950 text-gray-100 pt-28 pb-16 overflow-hidden">
       {/* background */}
@@ -36,7 +38,13 @@ export default function PageHero({ title, subtitle, ctaHref, ctaLabel }: Props) 
           )}
           {ctaHref && ctaLabel && (
             <div className="mt-6">
-              <a href={ctaHref} className="inline-block bg-blue-600 hover:bg-blue-700 transition-colors text-white px-6 py-2 rounded-lg">
+              <a
+                href={ctaHref}
+                className="inline-block bg-blue-600 hover:bg-blue-700 transition-colors text-white px-6 py-2 rounded-lg"
+                target={isDownloadLink ? '_blank' : undefined}
+                rel={isDownloadLink ? 'noreferrer' : undefined}
+                download={isDownloadLink || undefined}
+              >
                 {ctaLabel}
               </a>
             </div>

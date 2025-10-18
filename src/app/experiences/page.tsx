@@ -10,7 +10,7 @@ export default function ExperiencesPage() {
         <PageHero
           title="Parcours Professionnel"
           subtitle="Expériences, formations et compétences clés"
-          ctaHref="/images/cv.pdf"
+          ctaHref="/Bedi_Tshitsho_CV.pdf"
           ctaLabel="Télécharger mon CV"
         />
         <Experiences />

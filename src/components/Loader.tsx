@@ -31,7 +31,7 @@ export default function Loader() {
           >
             <div className="w-24 h-24 rounded-full bg-blue-900/30 border-2 border-blue-600/50 flex items-center justify-center">
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                CN
+                Bedi
               </span>
             </div>
             <motion.div

@@ -32,7 +32,7 @@ export default function Services() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-3xl md:text-4xl font-bold">Services</h2>
-          <p className="text-gray-400 mt-3">Ce que je propose</p>
+          <p className="text-gray-400 mt-3">Des solutions sur mesure pour propulser votre présence digitale</p>
         </motion.div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {items.map((s, idx) => (
