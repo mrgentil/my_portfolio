@@ -14,6 +14,7 @@ export default function Header() {
 
   // Active section on home, for scroll spy
   const [activeSection, setActiveSection] = useState<'home'|'services'|'technologies'|'projets'|'contact'>('home');
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     if (!isHome) return;
@@ -23,7 +24,6 @@ export default function Header() {
       .filter((el): el is HTMLElement => !!el);
     const observer = new IntersectionObserver(
       (entries) => {
-        // pick the entry most in view
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort((a, b) => (b.intersectionRatio || 0) - (a.intersectionRatio || 0));
@@ -57,6 +57,7 @@ export default function Header() {
               Bedi TSHITSHOMPO
             </Link>
           </div>
+          {/* Menu desktop */}
           <nav className="hidden md:flex space-x-8">
             <Link href="/#home" className={clsHome}>
               Accueil
@@ -77,14 +78,38 @@ export default function Header() {
               Contact
             </Link>
           </nav>
+          {/* Bouton hamburger mobile */}
           <div className="md:hidden">
-            <button className="text-gray-300 hover:text-blue-400" aria-label="Menu">
+            <button className="text-gray-300 hover:text-blue-400" aria-label="Menu" onClick={() => setIsOpen(!isOpen)}>
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
           </div>
         </div>
+        {/* Menu mobile */}
+        {isOpen && (
+          <nav className="flex flex-col space-y-4 md:hidden mt-2 pb-4 border-b border-gray-800 bg-gray-950/95 rounded-xl">
+            <Link href="/#home" className={clsHome} onClick={()=>setIsOpen(false)}>
+              Accueil
+            </Link>
+            <Link href="/experiences" className={`${base} ${isExp ? active : idle}`} onClick={()=>setIsOpen(false)}>
+              Expériences
+            </Link>
+            <Link href="/#services" className={clsServices} onClick={()=>setIsOpen(false)}>
+              Services
+            </Link>
+            <Link href="/#technologies" className={clsTech} onClick={()=>setIsOpen(false)}>
+              Technologies
+            </Link>
+            <Link href="/#projets" className={clsProjets} onClick={()=>setIsOpen(false)}>
+              Projets
+            </Link>
+            <Link href="/#contact" className={clsContact} onClick={()=>setIsOpen(false)}>
+              Contact
+            </Link>
+          </nav>
+        )}
       </div>
     </header>
   );
